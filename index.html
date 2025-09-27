@@ -466,7 +466,7 @@ async function search() {
         resultEl.innerHTML = data.items.map((item, index) => {
             return `
             <div class="photo-card" style="animation-delay: ${index * 0.1}s;">
-              <img src="${item.direct}" alt="Ảnh ${index + 1} 
+              <img src="${item.direct}" alt="Ảnh ${index + 1}; this.closest('.photo-card').innerHTML 
               <div class="card-overlay">
                 <div class="meta-info">
                   ${item.name ? `<b>Khách:</b> ${item.name}<br>` : ""}

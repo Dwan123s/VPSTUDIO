@@ -364,7 +364,7 @@
   </div>
 
   <div class="container">
-    <h1>Tra cứu Ảnh Thẻ</h1>
+    <h1>Tra cứu Ảnh Thẻ </h1>
     <div class="search-area">
       <div class="input-wrapper">
         <input id="code" type="text" placeholder="Nhập mã số khách hàng của bạn...">
@@ -466,7 +466,7 @@ async function search() {
         resultEl.innerHTML = data.items.map((item, index) => {
             return `
             <div class="photo-card" style="animation-delay: ${index * 0.1}s;">
-              <img src="${item.direct}" alt="Ảnh ${index + 1}; this.closest('.photo-card').innerHTML 
+              <img src="${item.direct}" alt="Ảnh ${index + 1}" onerror="this.style.display='none'; this.closest('.photo-card').innerHTML =+ '<p class=\\'message\\'>Không tải được ảnh.</p>';">
               <div class="card-overlay">
                 <div class="meta-info">
                   ${item.name ? `<b>Khách:</b> ${item.name}<br>` : ""}

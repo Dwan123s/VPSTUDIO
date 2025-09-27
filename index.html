@@ -5,244 +5,385 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tra cứu Ảnh Thẻ - VU PHAM STUDIO</title>
   <style>
+    /* --- BẢNG MÀU VÀ BIẾN SỐ MỚI --- */
     :root {
-      --bg-color: #0d1b2a;
-      --card-color: #1b263b;
-      --text-color: #e0eaff;
-      --secondary-text-color: #a0b4d0;
-      --input-bg: #24344d;
-      --border-color: #2f3f5c;
-      --primary-btn-bg: #2563eb;
-      --primary-btn-hover: #1d4ed8;
-      --link-color: #60a5fa;
       --font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      --bg-dark: #070B16;
+      --card-bg: rgba(22, 29, 53, 0.5); /* Nền kính mờ */
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-primary: #F0F4FF;
+      --text-secondary: #94A3B8;
+      --accent-color: #06B6D4; /* Màu Cyan làm điểm nhấn */
+      --accent-hover: #0891B2;
+      --glow-color: rgba(6, 182, 212, 0.3);
+      --error-color: #F87171; /* MỚI: Màu cho thông báo lỗi */
     }
 
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* --- HIỆU ỨNG NỀN CHUYỂN ĐỘNG --- */
     body {
       font-family: var(--font-family);
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #111827, #070B16, #1E293B);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text-primary);
       margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 24px;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
-    }
-
-    .background-watermark {
-      position: fixed;
-      bottom: 50%;
-      right: 50%;
-      transform: translate(50%, 50%) rotate(-10deg);
-      font-size: 15vw;
-      font-weight: 900;
-      color: rgba(96, 165, 250, 0.05);
-      pointer-events: none;
-      user-select: none;
-      z-index: -1;
-      letter-spacing: 5px;
-      white-space: nowrap;
     }
     
+    .background-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--accent-color);
+      filter: blur(150px);
+      opacity: 0.2;
+    }
+    
+    .shape1 {
+      width: 400px;
+      height: 400px;
+      top: 10%;
+      left: 10%;
+      animation: move 20s infinite alternate;
+    }
+
+    .shape2 {
+      width: 300px;
+      height: 300px;
+      bottom: 10%;
+      right: 10%;
+      animation: move 25s infinite alternate-reverse;
+    }
+
+
+    /* --- CONTAINER KÍNH MỜ CHÍNH --- */
     .container {
       width: 100%;
-      max-width: 550px;
+      max-width: 600px;
       padding: 32px;
-      background: var(--card-color);
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       animation: fadeIn 0.8s ease-in-out;
       z-index: 1;
+      box-sizing: border-box;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
-      font-size: 1.8rem;
       margin-bottom: 30px;
-      color: #ffffff;
-      font-weight: 600;
-      text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+      color: var(--text-primary);
+      font-weight: 700;
+      text-shadow: 0 0 10px var(--glow-color);
     }
-
+    h1 { font-size: 1.8rem; letter-spacing: 1px; }
+    h2 { font-size: 1.5rem; }
+    
+    
+    /* --- KHU VỰC TÌM KIẾM MỚI --- */
     .search-area {
       display: flex;
-      gap: 12px;
       margin-bottom: 24px;
+      position: relative;
     }
-
-    input, button {
-      padding: 14px 18px;
-      border-radius: 10px;
+    
+    .input-wrapper {
+      flex-grow: 1;
+      position: relative;
+    }
+    
+    #code {
+      width: 87%;
+      height: 54px;
+      padding: 0 50px 0 20px;
+      background-color: rgba(15, 23, 42, 0.7);
       border: 1px solid var(--border-color);
+      border-radius: 12px;
       font-size: 1rem;
+      color: var(--text-primary);
       transition: all 0.3s ease;
-    }
-
-    input {
-      flex: 1;
-      background: var(--input-bg);
-      color: var(--text-color);
       outline: none;
     }
-    input:focus {
-      border-color: var(--primary-btn-bg);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+    
+    #code:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--glow-color);
     }
-
-    button {
-      background: var(--primary-btn-bg);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-    button:hover {
-      background: var(--primary-btn-hover);
-    }
-    button:active {
-      transform: translateY(1px);
-    }
-
-    .ripple {
+    
+    #clear-btn {
       position: absolute;
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 50%;
-      transform: scale(0);
-      animation: ripple 0.6s linear;
+      right: 60px; /* Nhường chỗ cho nút search */
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: none;
+      z-index: 2;
     }
-
+    
+    #btn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-color);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+    
+    #btn:hover {
+      background: var(--accent-hover);
+    }
+    
+    #btn svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* --- KHU VỰC KẾT QUẢ VÀ THẺ ẢNH --- */
     #result {
-      padding: 20px;
-      background: var(--input-bg);
+      padding: 0;
+      background: transparent;
       border-radius: 12px;
       min-height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px solid var(--border-color);
+      border: none;
+      gap: 16px;
     }
-
+    
     .message {
-      font-weight: 500;
-      color: var(--secondary-text-color);
-      font-size: 1rem;
-    }
-
-    .photo-card {
-      background: var(--card-color);
       padding: 20px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      margin-top: 16px;
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       width: 100%;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: slideIn 0.5s ease forwards;
+      box-sizing: border-box;
+      text-align: center;
+      color: var(--text-secondary);
     }
-    .photo-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.5);
+    
+    /* === MỚI: CSS RIÊNG CHO THÔNG BÁO LỖI === */
+    .message.error {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-align: left;
+        border-color: var(--error-color);
+        background: rgba(248, 113, 113, 0.1); /* Nền màu đỏ nhẹ */
     }
-    .photo-card img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
+    .message.error svg {
+        width: 32px;
+        height: 32px;
+        color: var(--error-color);
+        flex-shrink: 0; /* Đảm bảo icon không bị co lại */
+    }
+     .message.error small {
+        color: var(--text-secondary);
+        opacity: 0.8;
+    }
+    
+    .photo-card {
+      background-color: transparent;
+      border-radius: 16px;
       border: 1px solid var(--border-color);
-      margin-bottom: 16px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      animation: slideIn 0.5s ease forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .photo-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      border-color: var(--accent-color);
+    }
+    
+    .photo-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
     }
 
     .meta-info {
       font-size: 0.95rem;
-      text-align: left;
-      width: 100%;
       line-height: 1.6;
+      color: var(--text-primary);
     }
-
+    
     .actions {
-      margin-top: 12px;
+      position: absolute;
+      top: 12px;
+      right: 12px;
       display: flex;
-      gap: 15px;
+      gap: 8px;
     }
 
     .actions a {
-      color: var(--link-color);
-      text-decoration: none;
-      transition: color 0.2s ease;
-      font-weight: 500;
-    }
-    .actions a:hover {
-      color: #fff;
-      text-decoration: underline;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(22, 29, 53, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      color: var(--text-primary);
+      backdrop-filter: blur(5px);
+      transition: all 0.2s ease;
     }
 
+    .actions a:hover {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+    
+    .actions a svg {
+      width: 20px;
+      height: 20px;
+    }
+    
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.2);
-      border-top: 4px solid var(--link-color);
+      border-top: 4px solid var(--accent-color);
       border-radius: 50%;
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
     }
+    
+    /* --- KHU VỰC LỊCH SỬ --- */
+    #history-container {
+      margin-top: 30px;
+    }
+    #history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    #history-list li a {
+      display: block;
+      padding: 8px 16px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    #history-list li a:hover {
+      background-color: var(--accent-color);
+      border-color: var(--accent-hover);
+      color: var(--text-primary);
+    }
 
+
+    /* --- KEYFRAMES ANIMATIONS --- */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes move {
+      from { transform: translate(0, 0) rotate(0deg); }
+      to { transform: translate(100px, 50px) rotate(30deg); }
+    }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes ripple {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
+    /* --- RESPONSIVE DESIGN --- */
     @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-        margin: 0 10px;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      .background-watermark {
-        font-size: 20vw;
-        bottom: 30%;
-        right: 50%;
-      }
+      body { padding: 16px; }
+      .container { padding: 24px; }
+      h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
-  <div class="background-watermark">VP STUDIO</div>
+  <div class="background-shapes">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+  </div>
 
   <div class="container">
-    <h1>Tra cứu Ảnh Thẻ - VU PHAM STUDIO</h1>
+    <h1>Tra cứu Ảnh Thẻ</h1>
     <div class="search-area">
-      <input id="code" type="text" placeholder="Nhập mã số khách hàng">
-      <button id="btn">Tra cứu</button>
+      <div class="input-wrapper">
+        <input id="code" type="text" placeholder="Nhập mã số khách hàng của bạn...">
+        <button id="clear-btn">&times;</button>
+        <button id="btn" aria-label="Tra cứu">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+        </button>
+      </div>
     </div>
     <div id="result">
-      <p class="message">Nhập mã khách hàng để tra cứu ảnh của bạn.</p>
+      <p class="message">Nhập mã để xem ảnh của bạn.</p>
     </div>
+  </div>
+
+  <div id="history-container" class="container" style="display: none;">
+    <h2>Lịch sử</h2>
+    <ul id="history-list"></ul>
   </div>
 
 <script>
@@ -251,65 +392,123 @@ const API = "https://script.google.com/macros/s/AKfycbzuvdWv9IKtWJ0DiQkANjVibpEv
 const codeEl = document.getElementById('code');
 const btn = document.getElementById('btn');
 const resultEl = document.getElementById('result');
+const clearBtn = document.getElementById('clear-btn');
+const historyContainer = document.getElementById('history-container');
+const historyListEl = document.getElementById('history-list');
 
+// --- SVG Icons ---
+const iconDownload = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
+const iconDrive = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.243 10.424L12.011 20.499L4.757 10.424L8.389 4H15.611L19.243 10.424ZM22 10.5L15.75 0H8.25L2 10.5L12.011 24L22 10.5Z" /></svg>`;
+const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
+// === MỚI: Thêm icon Lỗi (Error) ===
+const iconError = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>`;
+
+// === EVENT LISTENERS ===
 btn.addEventListener('click', search);
-btn.addEventListener('mousedown', function(e) {
-  const ripple = document.createElement('span');
-  ripple.className = 'ripple';
-  const rect = this.getBoundingClientRect();
-  ripple.style.left = (e.clientX - rect.left) + 'px';
-  ripple.style.top = (e.clientY - rect.top) + 'px';
-  this.appendChild(ripple);
-  setTimeout(() => ripple.remove(), 600);
+codeEl.addEventListener('keypress', e => { if (e.key === 'Enter') search(); });
+codeEl.addEventListener('input', () => { clearBtn.style.display = codeEl.value ? 'block' : 'none'; });
+clearBtn.addEventListener('click', () => {
+    codeEl.value = '';
+    clearBtn.style.display = 'none';
+    codeEl.focus();
+    resultEl.innerHTML = `<p class="message">Nhập mã để xem ảnh của bạn.</p>`;
 });
 
-const qs = new URLSearchParams(location.search);
-const preset = qs.get('code');
-if (preset) {
-  codeEl.value = preset;
-  search();
+document.body.addEventListener('click', e => {
+    const copyBtn = e.target.closest('.copy-link');
+    const historyLink = e.target.closest('#history-list a');
+
+    if (copyBtn) {
+        e.preventDefault();
+        const linkToCopy = copyBtn.dataset.link;
+        navigator.clipboard.writeText(linkToCopy).then(() => {
+            copyBtn.innerHTML = '✅';
+            setTimeout(() => { copyBtn.innerHTML = iconCopy; }, 2000);
+        }).catch(() => alert('Sao chép thất bại!'));
+    }
+
+    if (historyLink) {
+        e.preventDefault();
+        codeEl.value = historyLink.dataset.code;
+        search();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+// === MAIN FUNCTIONS ===
+if (new URLSearchParams(location.search).get('code')) {
+    codeEl.value = new URLSearchParams(location.search).get('code');
+    search();
 }
 
 async function search() {
-  const code = (codeEl.value || "").trim();
-  if (!code) {
-    resultEl.innerHTML = "<p class='message'><b>Vui lòng nhập mã</b></p>";
-    return;
-  }
-
-  resultEl.innerHTML = "<div class='spinner'></div>";
-  const url = API + "?code=" + encodeURIComponent(code);
-
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.ok) {
-      resultEl.innerHTML = `<p class='message'><b>Không tìm thấy mã: ${code}</b></p>`;
-      return;
+    const code = (codeEl.value || "").trim();
+    if (!code) {
+        resultEl.innerHTML = "<p class='message'><b>Vui lòng nhập mã của bạn</b></p>";
+        return;
     }
 
-    resultEl.innerHTML = data.items.map((item, index) => {
-      const imgSrc = item.direct;
-      return `
-        <div class="photo-card" style="animation-delay: ${index * 0.1}s;">
-          <img src="${imgSrc}" alt="Ảnh ${index + 1}" onerror="this.style.display='none';">
-          <div class="meta-info">
-            ${item.name ? `<b>Khách:</b> ${item.name}<br>` : ""}
-            <b>Mã:</b> ${item.code}<br>
-            <div class="actions">
-              <a href="${imgSrc}" download target="_blank">Tải ảnh</a> |
-              <a href="${item.webView}" target="_blank">Xem trên Drive</a>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join("");
+    resultEl.innerHTML = "<div class='spinner'></div>";
+    const url = `${API}?code=${encodeURIComponent(code)}`;
 
-  } catch (e) {
-    resultEl.innerHTML = "<p class='message'><b>Lỗi kết nối API</b></p>";
-  }
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.ok || data.items.length === 0) {
+            // === THAY ĐỔI: Sử dụng icon SVG cho thông báo lỗi ===
+            resultEl.innerHTML = `<div class='message error'>${iconError}<div><b>Không tìm thấy mã: ${code}</b><br><small>Vui lòng kiểm tra lại nhé.</small></div></div>`;
+            return;
+        }
+        
+        saveToHistory(code, data.items[0].name);
+
+        resultEl.innerHTML = data.items.map((item, index) => {
+            return `
+            <div class="photo-card" style="animation-delay: ${index * 0.1}s;">
+              <img src="${item.direct}" alt="Ảnh ${index + 1}" onerror="this.style.display='none'; this.closest('.photo-card').innerHTML += '<p class=\\'message\\'>Không tải được ảnh.</p>';">
+              <div class="card-overlay">
+                <div class="meta-info">
+                  ${item.name ? `<b>Khách:</b> ${item.name}<br>` : ""}
+                  <b>Mã:</b> ${item.code}
+                </div>
+              </div>
+              <div class="actions">
+                <a href="${item.direct}" download title="Tải ảnh">${iconDownload}</a>
+                <a href="${item.webView}" target="_blank" title="Xem trên Drive">${iconDrive}</a>
+                <a href="#" class="copy-link" data-link="${item.direct}" title="Sao chép link">${iconCopy}</a>
+              </div>
+            </div>`;
+        }).join("");
+    } catch (e) {
+        resultEl.innerHTML = "<p class='message'><b>Lỗi kết nối API. Vui lòng thử lại sau.</b></p>";
+    }
 }
+
+// === HISTORY FUNCTIONS ===
+function saveToHistory(code, name) {
+    let history = JSON.parse(localStorage.getItem('photoSearchHistory')) || [];
+    history = history.filter(item => item.code.toLowerCase() !== code.toLowerCase());
+    history.unshift({ code: code, name: name || 'N/A', date: new Date().toLocaleDateString('vi-VN') });
+    if (history.length > 10) history.pop();
+    localStorage.setItem('photoSearchHistory', JSON.stringify(history));
+    loadHistory();
+}
+
+function loadHistory() {
+    const history = JSON.parse(localStorage.getItem('photoSearchHistory')) || [];
+    if (history.length > 0) {
+        historyContainer.style.display = 'block';
+        historyListEl.innerHTML = history.map(item => 
+            `<li><a href="#" data-code="${item.code}">${item.code}</a></li>`
+        ).join('');
+    } else {
+        historyContainer.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadHistory);
+
 </script>
 </body>
 </html>
